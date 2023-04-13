@@ -1,0 +1,51 @@
+﻿@using EczaneApp.EntityLayer
+@model List<SatisDetay>
+@{
+    ViewBag.Title = "Satış Detayı";
+}
+
+@using System.Web.Optimization
+@section styles{
+    @Styles.Render("~/site/dataCSS")
+}
+@section scripts{
+    @Scripts.Render("~/site/dataJS")
+
+    <script>
+        $(document).ready(function () {
+            $('table').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Turkish.json'
+                }
+            });
+        });
+    </script>
+}
+
+<h2>Satış Detayı</h2>
+<br />
+<br />
+<table class="table table-hover table-bordered table-striped">
+    <thead>
+        <tr style="user-select:none;">
+            <th>ID</th>
+            <th>İlaç</th>
+            <th>Adet</th>
+            <th>Adet Fiyat</th>
+            <th>Tutar</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Ilac.Ad</td>
+            <td>@item.Adet</td>
+            <td>@String.Format("{0:C}", item.AdetFiyat)</td>
+            <td>@String.Format("{0:C}", item.Tutar)</td>
+        </tr>
+    }
+    </tbody>
+</table>
+

@@ -1,0 +1,56 @@
+﻿@using EczaneApp.EntityLayer
+@model List<Satis>
+@{
+    ViewBag.Title = "Satışlar";
+}
+
+@using System.Web.Optimization
+@section styles{
+    @Styles.Render("~/site/dataCSS")
+}
+@section scripts{
+    @Scripts.Render("~/site/dataJS")
+
+    <script>
+        $(document).ready(function () {
+            $('table').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Turkish.json'
+                }
+            });
+        });
+    </script>
+}
+
+<h2>Satışlar</h2>
+<br />
+<br />
+<table class="table table-hover table-bordered table-striped">
+    <thead>
+        <tr style="user-select:none;">
+            <th>ID</th>
+            <th>Tarih</th>
+            <th>Tutar</th>
+            <th>Müşteri</th>
+            <th>Personel</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Tarih</td>
+            <td>@String.Format("{0:C}", item.Tutar)</td>
+            <td>@item.Musteri.Ad</td>
+            <td>@item.Personel.Ad</td>
+            <td>
+                <a href="@Url.Action("Sil",new { id = item.Id })" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></a>
+                <a href="@Url.Action("SatisDetay",new { id = item.Id })" class="btn btn-xs btn-default"><i class="fas fa-eye"></i></a>
+            </td>
+        </tr>
+    }
+        </tbody>
+</table>
+

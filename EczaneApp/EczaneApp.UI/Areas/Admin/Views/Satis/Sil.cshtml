@@ -1,0 +1,20 @@
+﻿@using EczaneApp.EntityLayer
+@model Satis
+@{
+    ViewBag.Title = "Satış Sil";
+}
+
+<h2>Satış Sil</h2>
+
+@using (Html.BeginForm("Sil", "Satis", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label class="control-label">@Model.Tarih tarihli satışı silmek istiyor musunuz?</label>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Evet" class="btn btn-default" />
+        @Html.ActionLink("İptal", "Listele", "Satis", new { @class = "btn btn-danger" })
+    </div>
+}
+

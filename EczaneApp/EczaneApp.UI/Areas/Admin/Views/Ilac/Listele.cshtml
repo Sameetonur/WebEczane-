@@ -1,0 +1,62 @@
+﻿@using EczaneApp.EntityLayer
+@model List<Ilac>
+@{
+    ViewBag.Title = "İlaçlar";
+}
+
+@using System.Web.Optimization
+@section styles{
+    @Styles.Render("~/site/dataCSS")
+}
+@section scripts{
+    @Scripts.Render("~/site/dataJS")
+
+    <script>
+        $(document).ready(function () {
+            $('table').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Turkish.json'
+                }
+            });
+        });
+    </script>
+}
+
+<h2>İlaçlar</h2>
+<br />
+<a href="@Url.Action("Ekle")" class="btn btn-success"><i class="fas fa-plus"></i> Ekle</a>
+<br />
+<br />
+<table class="table table-hover table-bordered table-striped">
+    <thead>
+        <tr style="user-select:none;">
+            <th>ID</th>
+            <th>Ad</th>
+            <th>Adet</th>
+            <th>Fiyat</th>
+            <th>Kategori</th>
+            <th>Son Kullanma Tarihi</th>
+            <th>Açıklama</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Ad</td>
+            <td>@item.Adet</td>
+            <td>@String.Format("{0:C}", item.Fiyat)</td>
+            <td>@item.Kategori.Ad</td>
+            <td>@item.SKT</td>
+            <td>@item.Aciklama</td>
+            <td>
+                <a href="@Url.Action("Sil",new { id = item.Id })" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></a>
+                <a href="@Url.Action("Duzenle",new { id = item.Id })" class="btn btn-xs btn-primary"><i class="fas fa-edit"></i></a>
+            </td>
+        </tr>
+    }
+        </tbody>
+</table>
+

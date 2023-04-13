@@ -1,0 +1,248 @@
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/site/css")
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <style type="text/css">
+        .fList, .fSosyal {
+            padding: 20px;
+            margin: 0;
+            list-style: none;
+        }
+
+            .fList li a {
+                text-decoration: none;
+                color: white;
+                font-family: Arial;
+                font-weight: 500;
+            }
+
+            .fSosyal li, .fList li {
+                padding: 10px;
+                text-align: center;
+            }
+
+                .fSosyal li:hover, .fList li:hover {
+                    background-color: black;
+                }
+
+                .fSosyal li a div {
+                    padding: 5px;
+                    color: white;
+                    text-decoration: none;
+                    display: inline-block;
+                    line-height: 20px;
+                }
+
+                .fSosyal li i {
+                    display: inline-block;
+                }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <i class="fas fa-clinic-medical navbar-brand"></i> @Html.ActionLink("EczaneApp", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" style="width: 80%;">
+                    @{
+                        string cnt = this.ViewContext.RouteData.Values["controller"].ToString();
+                    }
+                    <li @((cnt == "Home") ? "class=active" : "")><a href="@Url.Action("Index","Home",new { area = "" })">Ana Sayfa</a></li>
+                    @if (HttpContext.Current.Session["user"] != null)
+                    {
+                        if ((HttpContext.Current.Session["user"] as EczaneApp.EntityLayer.Kullanici).Yetki == EczaneApp.EntityLayer.Yetkiler.Admin)
+                        {
+                            <li><a href="@Url.Action("Listele", "Kategori",new { area = "Admin" })">Panel</a></li>
+                        }
+                        <li><a href="@Url.Action("Cikis", "User",new { area = "" })">Çıkış Yap</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Giris","User",new { area = "" })">Giriş Yap</a></li>
+                        <li><a href="@Url.Action("Kayit","User",new { area = "" })">Kayıt Ol</a></li>
+                    }
+                    @if (HttpContext.Current.Session["SepetAdet"] != null && HttpContext.Current.Session["ToplamTutar"] != null)
+                    {
+                        <li style="float:right;"><a href="#" id="sepetAdet" data-toggle="modal" data-target="#sepetModal">Sepet (<font color='#ff0000'>@HttpContext.Current.Session["SepetAdet"]</font>) &nbsp; @HttpContext.Current.Session["ToplamTutar"]₺</a></li>
+                    }
+                    else
+                    {
+                        <li style="float:right;"><a href="#" id="sepetAdet" data-toggle="modal" data-target="#sepetModal">Sepet (0)</a></li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            @Html.Partial("_Footer")
+        </footer>
+    </div>
+    @Scripts.Render("~/site/js")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+    <script>
+
+        function SepeteEkle(id) {
+            $.ajax({
+                url: '/Home/SepeteEkle/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function (veri) {
+                    if (veri == 100) {
+                        toastr.error("Stok bitmiş.");
+                        return;
+                    }
+                    if (veri[0] == 1) {
+                        toastr.success('İlaç sepete eklendi.');
+                        SepetGetir();
+                        $("#sepetAdet").html("Sepet (<font color='#ff0000'>" + veri[1] + "</font>) &nbsp;" + veri[2].toFixed(2) + "₺");
+                        return;
+                    }
+                },
+                error: function (hata) {
+                    console.log(hata);
+                }
+            });
+
+        }
+        function SepetTemizle() {
+            $.ajax({
+                url: '/Home/SepetTemizle/',
+                type: 'POST',
+                dataType: 'json',
+                success: function (veri) {
+                    if (veri == 100) {
+                        toastr.error("Sepette ürün zaten yok.");
+                        return;
+                    }
+                    if (veri == 1) {
+                        toastr.success('Sepet temizlendi.');
+                        SepetGetir();
+                        $("#sepetAdet").html("Sepet (0)");
+                        return;
+                    }
+                },
+                error: function (hata) {
+                    console.log(hata);
+                }
+            });
+        }
+        function SepetOnayla() {
+            var $btn = $("#onayla").button('loading');
+            var $btn2 = $("#temizle").button('loading');
+            $.ajax({
+                url: '/Home/SepetOnayla/',
+                type: 'POST',
+                dataType: 'json',
+                success: function (veri) {
+                    if (veri == 100) {
+                        toastr.error("Sepette ürün yok.");
+                        $btn.button('reset');
+                        $btn2.button('reset');
+                        return;
+                    }
+                    if (veri == 200) {
+                        toastr.warning("Sepeti onaylamak için giriş yapmalısınız.");
+                        $btn.button('reset');
+                        $btn2.button('reset');
+                        return;
+                    }
+                    if (veri == 300) {
+                        toastr.error("Sepeti onaylarken bir hata oluştu.");
+                        $btn.button('reset');
+                        $btn2.button('reset');
+                        return;
+                    }
+                    if (veri == 1) {
+                        toastr.success('Sepet onaylandı.');
+                        setTimeout(function () { location.reload(); }, 2000);
+                        return;
+                    }
+                },
+                error: function (hata) {
+                    console.log(hata);
+                }
+            });
+        }
+        function SepetGetir() {
+            $.ajax({
+                url: '/Home/SepetGetir/',
+                type: 'POST',
+                dataType: 'json',
+                success: function (veri) {
+                    var sepetText = '';
+                    $("#sepetDetaylar").empty();
+                    var toplamT = 0;
+                    $("#sepetToplam").empty();
+                    if (veri == 100) {
+                        $("#sepetDetaylar").append("<tr><td colspan='6'>Sepet Boş.</td></tr>");
+                        return;
+                    }
+                    $.each(veri, function (index, value) {
+                        sepetText += '<tr>' +
+                            '<td>' + index + '</td>' +
+                            '<td>' + value["IlacAd"] + '</td>' +
+                            '<td>' + value["Adet"] + '</td>' +
+                            '<td>' + value["AdetFiyat"].toFixed(2) + '₺</td>' +
+                            '<td>' + value["Tutar"].toFixed(2) + '₺</td>' +
+                            '<td>' +
+                            '<a onclick="SepetUrunSil(' + index + ')" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></a>' +
+                            '</td>' +
+                            '</tr>';
+                        toplamT += value["Tutar"];
+                    });
+                    $("#sepetDetaylar").append(sepetText);
+                    $("#sepetToplam").html("Toplam Tutar <b>" + toplamT.toFixed(2) + "₺</b>");
+
+                },
+                error: function (hata) {
+                    console.log(hata);
+                }
+            });
+        }
+        function SepetUrunSil(index) {
+            $.ajax({
+                url: '/Home/SepetUrunSil/',
+                data: { index: index },
+                type: 'POST',
+                dataType: 'json',
+                success: function (veri) {
+                    if (veri == 100) {
+                        toastr.error("Ürün sepette değil.");
+                        return;
+                    }
+                    if (veri[0] == 1) {
+                        toastr.success('Ürünün 1 adedi sepetten çıkarıldı.');
+                        SepetGetir();
+                        $("#sepetAdet").html("Sepet (<font color='#ff0000'>" + veri[1] + "</font>) &nbsp;" + veri[2].toFixed(2) + "₺");
+                        return;
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+        $(document).ready(function () {
+            SepetGetir();
+        });
+    </script>
+</body>
+</html>

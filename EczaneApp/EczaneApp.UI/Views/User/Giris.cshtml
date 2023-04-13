@@ -1,0 +1,36 @@
+﻿@using EczaneApp.EntityLayer
+@model Kullanici
+@{
+    ViewBag.Title = "Giriş Yap";
+}
+
+<h2>Giriş Yap</h2>
+<div class="row">
+    @using (Html.BeginForm("Giris", "User", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("returnUrl",Request.QueryString["ReturnUrl"])
+        <div class="form-group">
+            @Html.LabelFor(x => x.Ad, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.Ad, new { @class = "form-control", @placeholder = "Kullanıcı Adı" })
+                @Html.ValidationMessageFor(x => x.Ad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Sifre, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.PasswordFor(x => x.Sifre, new { @class = "form-control", @placeholder = "Şifre" })
+                @Html.ValidationMessageFor(x => x.Sifre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+       
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Giriş Yap" class="btn btn-success" />
+            </div>
+        </div>
+    }
+</div>
+

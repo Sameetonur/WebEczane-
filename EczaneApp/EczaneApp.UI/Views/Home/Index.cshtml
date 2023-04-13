@@ -1,0 +1,48 @@
+﻿@using EczaneApp.EntityLayer
+@model List<Ilac>
+@{
+    ViewBag.Title = "İlaçlar";
+}
+
+<h2>İlaçlar</h2>
+<br />
+<hr />
+<div class="row">
+    @foreach (var item in Model)
+    {
+        @Html.Partial("_Ilac", item);
+    }
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="sepetModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Sepet</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr style="user-select:none;">
+                            <th>ID</th>
+                            <th>İlaç</th>
+                            <th>Adet</th>
+                            <th>Adet Fiyat</th>
+                            <th>Tutar</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="sepetDetaylar">
+                        
+                    </tbody>
+                    <tfoot><tr><td colspan="6"style="text-align:right;" id="sepetToplam"></td></tr></tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="temizle" class="btn btn-default" data-dismiss="modal" onclick="SepetTemizle()" data-loading-text="<i class='fas fa-times'></i> Temizle"><i class="fas fa-times"></i> Temizle</button>
+                <button type="button" id="onayla" class="btn btn-primary" onclick="SepetOnayla()" data-loading-text="<i class='fas fa-check'></i> Onaylanıyor..."><i class="fas fa-check"></i> Onayla</button>
+            </div>
+        </div>
+    </div>
+</div>

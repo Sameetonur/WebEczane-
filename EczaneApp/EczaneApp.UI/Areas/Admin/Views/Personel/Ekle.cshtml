@@ -1,0 +1,48 @@
+﻿@using EczaneApp.EntityLayer
+@model Personel
+@{
+    ViewBag.Title = "Personel Ekle";
+}
+
+<h2>Personel Ekle</h2>
+<div class="row">
+    @using (Html.BeginForm("Ekle", "Personel", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            @Html.LabelFor(x => x.Ad, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.Ad, new { @class = "form-control", @placeholder = "Ad" })
+                @Html.ValidationMessageFor(x => x.Ad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Soyad, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.Soyad, new { @class = "form-control", @placeholder = "Soyad" })
+                @Html.ValidationMessageFor(x => x.Soyad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.TC, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.TC, new { @class = "form-control", @placeholder = "TC", maxlength="11" })
+                @Html.ValidationMessageFor(x => x.TC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.DogumTarih, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.DogumTarih, new { @class = "form-control", @placeholder = "Doğum Tarihi", type="date"})
+                @Html.ValidationMessageFor(x => x.DogumTarih, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Kaydet" class="btn btn-success" />
+            </div>
+        </div>
+    }
+</div>
+

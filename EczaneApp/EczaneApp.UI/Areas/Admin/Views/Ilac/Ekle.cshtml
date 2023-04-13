@@ -1,0 +1,62 @@
+﻿@using EczaneApp.EntityLayer
+@model Ilac
+@{
+    ViewBag.Title = "İlaç Ekle";
+}
+
+<h2>İlaç Ekle</h2>
+<div class="row">
+    @using (Html.BeginForm("Ekle", "Ilac", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            @Html.LabelFor(x => x.Ad, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.Ad, new { @class = "form-control", @placeholder = "Ad" })
+                @Html.ValidationMessageFor(x => x.Ad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Adet, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.Adet, new { @class = "form-control", @placeholder = "Adet", type = "number" })
+                @Html.ValidationMessageFor(x => x.Adet, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Fiyat, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.Fiyat, new { @class = "form-control", @placeholder = "Fiyat", type = "number" })
+                @Html.ValidationMessageFor(x => x.Fiyat, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Aciklama, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(x => x.Aciklama, new { @class = "form-control", @placeholder = "Açıklama" })
+                @Html.ValidationMessageFor(x => x.Aciklama, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Kategori, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(x => x.KategoriId, ViewBag.Kategoriler as SelectList, "Kategori Seçiniz", new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.KategoriId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.SKT, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.SKT, new { @class = "form-control", @placeholder = "Son Kullanım Tarihi", type = "date" })
+                @Html.ValidationMessageFor(x => x.SKT, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Kaydet" class="btn btn-success" />
+            </div>
+        </div>
+    }
+</div>
+

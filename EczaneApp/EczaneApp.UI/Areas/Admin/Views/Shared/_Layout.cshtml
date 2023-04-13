@@ -1,0 +1,96 @@
+﻿@using System.Web.Optimization
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/site/css")
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <style type="text/css">
+        .fList, .fSosyal {
+            padding: 20px;
+            margin: 0;
+            list-style: none;
+        }
+
+            .fList li a {
+                text-decoration: none;
+                color: white;
+                font-family: Arial;
+                font-weight: 500;
+            }
+
+            .fSosyal li, .fList li {
+                padding: 10px;
+                text-align: center;
+            }
+
+                .fSosyal li:hover, .fList li:hover {
+                    background-color: black;
+                }
+
+                .fSosyal li a div {
+                    padding: 5px;
+                    color: white;
+                    text-decoration: none;
+                    display: inline-block;
+                    line-height: 20px;
+                }
+
+                .fSosyal li i {
+                    display: inline-block;
+                }
+    </style>
+
+    @RenderSection("styles",false)
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <i class="fas fa-clinic-medical navbar-brand"></i> @Html.ActionLink("EczaneApp", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @{
+                        string cnt = this.ViewContext.RouteData.Values["controller"].ToString();
+                    }
+                    <li @((cnt == "Kategori") ? "class=active" : "")><a href="@Url.Action("Listele","Kategori")">Kategoriler</a></li>
+                    <li @((cnt == "Personel") ? "class=active" : "")><a href="@Url.Action("Listele","Personel")">Personeller</a></li>
+                    <li @((cnt == "Musteri") ? "class=active" : "")><a href="@Url.Action("Listele","Musteri")">Müşteriler</a></li>
+                    <li @((cnt == "Kullanici") ? "class=active" : "")><a href="@Url.Action("Listele","Kullanici")">Kullanıcılar</a></li>
+                    <li @((cnt == "Ilac") ? "class=active" : "")><a href="@Url.Action("Listele","Ilac")">İlaçlar</a></li>
+                    <li @((cnt == "Satis") ? "class=active" : "")><a href="@Url.Action("Listele","Satis")">Satışlar</a></li>
+                    @if (HttpContext.Current.Session["user"] != null)
+                    {
+                        <li><a href="@Url.Action("Cikis","User",new { area = "" })">Çıkış Yap</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Giris","User",new { area = "" })">Giriş Yap</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            @Html.Partial("_Footer")
+        </footer>
+    </div>
+
+
+    @Scripts.Render("~/site/js")
+    @RenderSection("scripts",false)
+</body>
+</html>
